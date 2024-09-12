@@ -67,10 +67,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Create GitHub Reliease
+        id: create_release
         if: startsWith(gthub.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
             udp_flooder_x86_64
             udp_flooder_arm64
+          
