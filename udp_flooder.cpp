@@ -83,7 +83,7 @@ void send_udp_message(const std::string& ip, int port, bool& stop_flag) {
         sendto(sockfd, hex_payload_1, sizeof(hex_payload_1), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
         sendto(sockfd, hex_payload_2, sizeof(hex_payload_2), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
         sendto(sockfd, hex_payload_3, sizeof(hex_payload_3), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
-       gcc sendto(sockfd, hex_payload_4, sizeof(hex_payload_4), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
+        sendto(sockfd, hex_payload_4, sizeof(hex_payload_4), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
     }
     close(sockfd);
 }
