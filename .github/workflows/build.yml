@@ -1,0 +1,78 @@
+name: auto-snapshot
+
+on:
+  push:
+    branches:
+      - "*" # Triggers the workflow on any branch push
+
+permissions:
+  contents: write
+
+env:
+  TZ: Asia/Kolkata
+
+jobs:
+  build-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install g++ and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ # Install g++ and any other dependencies if needed
+
+      - name: Build C++ application for x86_64
+        run: |
+          g++ -o udp_flooder_x86_64 udp_flooder.cpp # Compile for x86_64
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          TAG_NAME=$(echo "${{ github.event.head_commit.message }}" | tr -d ' ')
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+
+      - name: Upload Release Asset for x86_64
+        uses: actions/upload-artifact@v3
+        with:
+          name: cpp-binary-x86_64
+          path: udp_flooder_x86_64
+
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install g++ and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ # Install g++ and any other dependencies if needed
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu # Install cross-compilers for arm64
+
+      - name: Build C++ application for arm64
+        run: |
+          aarch64-linux-gnu-g++ -o udp_flooder_arm64 udp_flooder.cpp # Compile for arm64
+
+      - name: Upload Release Asset for arm64
+        uses: actions/upload-artifact@v3
+        with:
+          name: cpp-binary-arm64
+          path: udp_flooder_arm64
+
+  release:
+    needs: [build-x86_64, build-arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: ${{ env.TAG_NAME }}
+          body: |
+            Workflow Hash: `${{ github.sha }}`
+            Description: Auto-generated release
