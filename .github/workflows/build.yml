@@ -61,6 +61,12 @@ jobs:
           name: cpp-binary-arm64
           path: udp_flooder_arm64
 
+      - name: Create Tag
+        id: create_tag
+        run: |
+          TAG_NAME=$(echo "${{ github.event.head_commit.message }}" | sed 's/ / - /g')
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV    
+
   release:
     needs: [build-x86_64, build-arm64]
     runs-on: ubuntu-latest
