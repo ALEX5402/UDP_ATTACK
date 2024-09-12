@@ -67,13 +67,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Create GitHub Release
-        id: create_release
+      - name: Create GitHub Reliease
+        if: startsWith(gthub.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}
-          release_name: ${{ steps.create_tag.outputs.TAG_NAME }}
-          body: |
-            Workflow Hash: `${{ github.sha }}`
-            Description: Auto-generated release
+          files: |
+            udp_flooder_x86_64
+            udp_flooder_arm64
