@@ -8,9 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  TZ: Asia/Kolkata
-
 jobs:
   build-x86_64:
     runs-on: ubuntu-latest
