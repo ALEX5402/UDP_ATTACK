@@ -1,4 +1,4 @@
-name: auto-snapshot
+name: build-and-release
 
 on:
   push:
@@ -30,8 +30,8 @@ jobs:
       - name: Create Tag
         id: create_tag
         run: |
-          TAG_NAME=$(echo "${{ github.event.head_commit.message }}" | sed 's/ / - /g')
-          echo "::set-output name=TAG_NAME::$TAG_NAME"
+          TAG_NAME=$(echo "${{ github.event.head_commit.message }}" | sed 's/ / - /g')-$(date +%Y%m%d%H%M%S)
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_STATE
 
       - name: Upload Release Asset for x86_64
         uses: actions/upload-artifact@v3
