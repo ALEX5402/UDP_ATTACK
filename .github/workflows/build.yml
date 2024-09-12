@@ -27,12 +27,6 @@ jobs:
         run: |
           g++ -o udp_flooder_x86_64 udp_flooder.cpp
 
-      - name: Create Tag
-        id: create_tag
-        run: |
-          TAG_NAME=$(echo "${{ github.event.head_commit.message }}" | sed 's/ / - /g')-$(date +%Y%m%d%H%M%S)
-          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_STATE
-
       - name: Upload Release Asset for x86_64
         uses: actions/upload-artifact@v3
         with:
@@ -68,12 +62,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create GitHub Reliease
-        id: create_release
-        if: startsWith(gthub.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+      - name: Upload Release Assets
+        uses: actions/upload-artifact@v4
         with:
-          files: |
-            udp_flooder_x86_64
-            udp_flooder_arm64
+          name: cpp-binary
+          path: |
+               udp_flooder_x86_64
+               udp_flooder_arm64
+
           
